@@ -1,13 +1,5 @@
-ASTELLAR MULTI-PAGE GITHUB PAGES SITE
+ASTELLAR FINAL HOMEPAGE UPDATE
 
-Files:
-index.html = Home
-shop.html = Shop
-about.html = About
-contact.html = Contact
-cart.html = Cart
-checkout.html = Checkout
-style.css = shared design
-script.js = shared cart
+The homepage now uses the exact supplied astellar-logo.png as the large background emblem. No AI-generated logo is used. The space background is a real NASA Scientific Visualization Studio starfield loaded from NASA.
 
-Upload ALL files to the ROOT of a public GitHub repository, then enable Settings > Pages > Deploy from branch > main > / (root).
+Replace the files in GitHub with every file in this folder, then hard refresh the GitHub Pages site (Ctrl+F5).
