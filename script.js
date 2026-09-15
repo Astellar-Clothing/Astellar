@@ -1,15 +1,14 @@
 const CART_KEY='astellarCart';
 let cart=JSON.parse(localStorage.getItem(CART_KEY)||'[]');
-function save(){localStorage.setItem(CART_KEY,JSON.stringify(cart));updateCount();}
-function updateCount(){document.querySelectorAll('#count').forEach(e=>e.textContent=cart.length);}
-function add(name,price,colour,size){cart.push({name,price,colour,size});save();toast(name+' added to cart');}
-function removeItem(i){cart.splice(i,1);save();renderCart();}
-function toast(msg){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
-function renderCart(){
- const box=document.getElementById('cartbox');if(!box)return;
- if(!cart.length){box.innerHTML='<p style="color:#aaa">Your cart is empty.</p>';return;}
- const total=cart.reduce((s,x)=>s+Number(x.price||0),0);
- box.innerHTML=cart.map((x,i)=>`<div class="cart-row"><div><b>${x.name}</b><div style="color:#aaa;margin-top:6px">${x.colour?x.colour+' / '+x.size+' • ':''}$${x.price} AUD</div></div><button class="remove" onclick="removeItem(${i})">REMOVE</button></div>`).join('')+
- `<div class="total">TOTAL: $${total} AUD</div><a class="btn" href="checkout.html">CHECKOUT</a>`;
-}
-updateCount();renderCart();
+function save(){localStorage.setItem(CART_KEY,JSON.stringify(cart));updateCount()}
+function updateCount(){document.querySelectorAll('#count').forEach(e=>e.textContent=cart.reduce((n,x)=>n+Number(x.qty||1),0))}
+function add(name,price,colour,size){const found=cart.find(x=>x.name===name&&x.colour===colour&&x.size===size);if(found)found.qty=(found.qty||1)+1;else cart.push({name,price,colour,size,qty:1});save();toast('ADDED TO CART')}
+function changeQty(i,delta){if(!cart[i])return;cart[i].qty=(cart[i].qty||1)+delta;if(cart[i].qty<1)cart.splice(i,1);save();renderCart()}
+function removeItem(i){cart.splice(i,1);save();renderCart()}
+function clearCart(){cart=[];save();renderCart()}
+function toast(msg){const t=document.getElementById('toast');if(!t)return;t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+function getTotal(){return cart.reduce((s,x)=>s+Number(x.price||0)*Number(x.qty||1),0)}
+function renderCart(){const box=document.getElementById('cartbox');if(!box)return;if(!cart.length){box.innerHTML='<div class="empty"><h3>YOUR CART IS EMPTY</h3><p>Add something from the collection and it will show up here.</p><a class="btn" href="shop.html">SHOP NOW</a></div>';return}const total=getTotal();box.innerHTML=cart.map((x,i)=>`<div class="cart-item"><div class="mini-tee tee ${x.colour==='White'?'white-tee':'black-tee'}"><span>✦</span></div><div><div class="cart-name">${x.name}</div><div class="cart-meta">${x.colour} / SIZE ${x.size}<br>$${x.price} AUD</div></div><div><div class="qty"><button onclick="changeQty(${i},-1)">−</button><span>${x.qty||1}</span><button onclick="changeQty(${i},1)">+</button></div><button class="remove" onclick="removeItem(${i})">REMOVE</button></div></div>`).join('')+`<div class="cart-footer"><button class="clear" onclick="clearCart()">CLEAR CART</button></div>`;const subtotal=document.getElementById('cartSubtotal');if(subtotal)subtotal.textContent='$'+total+' AUD';const checkout=document.getElementById('cartCheckout');if(checkout)checkout.href='checkout.html'}
+function renderCheckout(){const box=document.getElementById('checkoutItems');if(!box)return;if(!cart.length){box.innerHTML='<p class="muted">Your cart is empty.</p>';document.getElementById('checkoutForm')?.remove();return}box.innerHTML=cart.map(x=>`<div class="summary-row"><span>${x.name} × ${x.qty||1}<small>${x.colour} / ${x.size}</small></span><b>$${Number(x.price)*Number(x.qty||1)} AUD</b></div>`).join('');const total=document.getElementById('checkoutTotal');if(total)total.textContent='$'+getTotal()+' AUD'}
+function placeOrder(e){e.preventDefault();if(!cart.length)return;const form=e.target;const orderNo='AST-'+Date.now().toString().slice(-6);localStorage.setItem('astellarLastOrder',JSON.stringify({number:orderNo,total:getTotal()}));cart=[];save();form.style.display='none';const success=document.getElementById('success');if(success){success.classList.add('show');const n=document.getElementById('orderNumber');if(n)n.textContent=orderNo}}
+updateCount();renderCart();renderCheckout();
