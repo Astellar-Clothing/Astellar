@@ -1,7 +1,7 @@
 <!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ASTELLAR — Cart</title><link rel="stylesheet" href="style.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ASTELLAR — Cart</title><link rel="stylesheet" href="style.css"></head>
 <body>
 <header><nav class="nav"><a class="brand" href="index.html">ASTELLAR</a><div class="links"><a href="index.html">HOME</a><a href="shop.html">SHOP</a><a href="about.html">ABOUT</a><a href="contact.html">CONTACT</a><a class="active" href="cart.html">CART (<span id="count">0</span>)</a></div></nav></header>
-<main><section class="wrap"><h1 class="title">YOUR CART</h1><div class="box" id="cartbox"></div></section></main>
-<footer>© 2026 ASTELLAR • ALL RIGHTS RESERVED</footer><div id="toast" class="toast"></div><script src="script.js"></script></body></html>
+<main><section class="wrap"><span class="eyebrow">YOUR SELECTION</span><h1 class="title">CART</h1><div class="cart-layout"><div><div id="cartbox"></div></div><aside class="summary"><h3>ORDER SUMMARY</h3><div class="summary-row"><span>SUBTOTAL</span><b id="cartSubtotal">$0 AUD</b></div><div class="summary-row"><span>SHIPPING</span><span>CALCULATED AT CHECKOUT</span></div><div class="summary-row total"><span>TOTAL</span><span id="cartTotal">$0 AUD</span></div><a id="cartCheckout" class="btn full" href="checkout.html">CHECKOUT</a><a class="continue" href="shop.html">← CONTINUE SHOPPING</a></aside></div></section></main>
+<footer><div class="footer-brand">ASTELLAR</div><div>© 2026 ASTELLAR • ALL RIGHTS RESERVED</div></footer><div id="toast" class="toast"></div><script src="script.js"></script><script>const baseRender=renderCart;renderCart=function(){baseRender();const total=document.getElementById('cartTotal');if(total)total.textContent='$'+getTotal()+' AUD'};renderCart();</script>
+</body></html>
